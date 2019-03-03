@@ -14,7 +14,7 @@ public class BIOServer {
         try (ServerSocket serverSocket = new ServerSocket(8888)) {
             System.out.println("BIOServer has started,listening on port : " + serverSocket.getLocalSocketAddress());
             while (true) {
-                //1，等待客户端连接
+                //1，等待客户端连接，会阻塞
                 Socket clientSocket = serverSocket.accept();
                 System.out.println("Connection from : " + clientSocket.getRemoteSocketAddress());
                 try (Scanner input = new Scanner(clientSocket.getInputStream())) {

@@ -28,6 +28,7 @@ public class NIOServer {
         RequestHandler requestHandler = new RequestHandler();
         //不断循环监听channel的状态改变 accept read write
         while (true) {
+            //轮询连接，会阻塞，和serverSocket.accept();异曲同工
             int select = selector.select();
             if (select == 0) {
                 continue;
