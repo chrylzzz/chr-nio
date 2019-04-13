@@ -29,10 +29,19 @@ public class NettyServer {
                         @Override
                         protected void initChannel(SocketChannel ch) throws Exception {
                             ChannelPipeline pipeline=ch.pipeline();
+
 //                            pipeline.addLast("frameDecoder",new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE,0,));
-                            pipeline.addLast("frameEncoder",new LengthFieldPrepender(4));
-                            pipeline.addLast("encoder",new ObjectEncoder());
+//                            pipeline.addLast("frameEncoder",new LengthFieldPrepender(4));
+//                            pipeline.addLast("encoder",new ObjectEncoder());
 //                            pipeline.addLast("decoder",new ObjectDecoder(Integer.MAX_VALUE, ClassResolvers.));
+
+
+                            //百度,第三个参数开始：百度的4,0,4
+                            pipeline.addLast("frameDecoder", new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, 4, 0, 4));
+                            pipeline.addLast("frameEncoder", new LengthFieldPrepender(4));
+                            pipeline.addLast("encoder", new ObjectEncoder());
+                            //百度,第2个参数开始：百度的.cacheDisabled(null)
+                            pipeline.addLast("decoder", new ObjectDecoder(Integer.MAX_VALUE, ClassResolvers.cacheDisabled(null)));
                             //业务代码执行到这就可以了，SpringMVBC,只需要编写业务代码处理类MyServerHandler()
                             pipeline.addLast(new MyServerHandler());
                         }
