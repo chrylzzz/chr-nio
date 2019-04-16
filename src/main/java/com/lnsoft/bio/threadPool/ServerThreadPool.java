@@ -21,6 +21,7 @@ public class ServerThreadPool {
             while (true) {
                 Socket clientSocket = serverSocket.accept();
                 System.out.println("Connection from : " + clientSocket.getRemoteSocketAddress());
+                //交给线程池管理
                 executorService.submit(new ClientHandler(clientSocket, requestHandler));
             }
         } catch (Exception e) {
