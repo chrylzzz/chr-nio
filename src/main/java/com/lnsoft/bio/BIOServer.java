@@ -5,6 +5,8 @@ import java.net.Socket;
 import java.util.Scanner;
 
 /**
+ * BIO-Socket
+ * <p>
  * 单线程阻塞IO，只能单线程等待请求
  * Created By Chr on 2019/3/1/0001.
  */
