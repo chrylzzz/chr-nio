@@ -15,20 +15,23 @@ import io.netty.handler.codec.serialization.ObjectEncoder;
  * Created By Chr on 2019/3/3/0003.
  */
 public class NettyServer {
-    public static void main(String args[]){
-        EventLoopGroup bossGroup=new NioEventLoopGroup(1);
-        EventLoopGroup workGroup=new NioEventLoopGroup();
+    public static void main(String args[]) {
+        //一个boss线程池和work线程池，boss线程只负责接收请求,work线程只负责处理逻辑。
+        //分发者boss
+        EventLoopGroup bossGroup = new NioEventLoopGroup(1);
+        //真正工作的worker
+        EventLoopGroup workGroup = new NioEventLoopGroup();
         try {
-            ServerBootstrap b=new ServerBootstrap();
-            b.group(bossGroup,workGroup)
+            ServerBootstrap b = new ServerBootstrap();
+            b.group(bossGroup, workGroup)
                     .channel(NioServerSocketChannel.class)
-                    .option(ChannelOption.SO_BACKLOG,128)
-                    .childOption(ChannelOption.SO_KEEPALIVE,true)
+                    .option(ChannelOption.SO_BACKLOG, 128)
+                    .childOption(ChannelOption.SO_KEEPALIVE, true)
                     .childHandler(new ChannelInitializer<SocketChannel>() {
 
                         @Override
                         protected void initChannel(SocketChannel ch) throws Exception {
-                            ChannelPipeline pipeline=ch.pipeline();
+                            ChannelPipeline pipeline = ch.pipeline();
 
 //                            pipeline.addLast("frameDecoder",new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE,0,));
 //                            pipeline.addLast("frameEncoder",new LengthFieldPrepender(4));
@@ -46,11 +49,11 @@ public class NettyServer {
                             pipeline.addLast(new MyServerHandler());
                         }
                     });
-            ChannelFuture f=b.bind(6666).sync();
+            ChannelFuture f = b.bind(6666).sync();
             f.channel().closeFuture().sync();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             bossGroup.shutdownGracefully();
             workGroup.shutdownGracefully();
         }
